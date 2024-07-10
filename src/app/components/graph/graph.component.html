@@ -1,4 +1,6 @@
 <div class="container p-5">
-    <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>  
+    <canvasjs-chart *ngIf="!(errorNotValidCautomer || errorNoTransactions)" [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>  
+    <p *ngIf="errorNotValidCautomer" class="alert alert-danger">{{errorNotValidCautomer}}</p>
+    <p *ngIf="errorNoTransactions" class="alert alert-danger">{{errorNoTransactions}}</p>
     <a routerLink="/home" class="btn btn-primary d-block mx-auto w-25 mt-2">Back To Home</a>  
 </div>   

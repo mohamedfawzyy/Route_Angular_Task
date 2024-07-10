@@ -15,10 +15,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class GraphComponent implements OnInit {
   userId:number=null!;
- selectedCustomer:Customer[]=[];
- selectedCustomerTransaction:Transaction[]=[];
-amountPerDay=new Map();
-chartOptions ={};
+  selectedCustomer:Customer[]=[];
+  selectedCustomerTransaction:Transaction[]=[];
+  amountPerDay=new Map();
+  chartOptions ={};
+  errorNotValidCautomer:string="";
+  errorNoTransactions:string="";
   constructor(private _DataService:DataService ,private _ActivatedRoute:ActivatedRoute) {
     console.log("jo");
     
@@ -46,32 +48,42 @@ chartOptions ={};
   filterForSpecificUser(id:number){
   
    this.selectedCustomer=this.selectedCustomer.filter((customer)=>customer.id == id);
-   this.selectedCustomerTransaction=this.selectedCustomerTransaction.filter((transition)=>transition.customer_id==id); 
-   for (const transition of this.selectedCustomerTransaction) {
-      if(this.amountPerDay.has(transition.date)){
-        let totalAmount=this.amountPerDay.get(transition.date)+transition.amount;
-        this.amountPerDay.set(transition.date,totalAmount);
+   if(this.selectedCustomer.length > 0){
+    this.selectedCustomerTransaction=this.selectedCustomerTransaction.filter((transition)=>transition.customer_id==id); 
+    if(this.selectedCustomerTransaction.length > 0 ){
+      for (const transition of this.selectedCustomerTransaction) {
+        if(this.amountPerDay.has(transition.date)){
+          let totalAmount=this.amountPerDay.get(transition.date)+transition.amount;
+          this.amountPerDay.set(transition.date,totalAmount);
+        }
+        else{
+          this.amountPerDay.set(transition.date,transition.amount);
+        }
       }
-      else{
-        this.amountPerDay.set(transition.date,transition.amount);
+     
+      this.chartOptions= {
+        title: {
+          text: ` customer ${this.selectedCustomer[0].name}. `
+        },
+        animationEnabled: true,
+        axisY: {
+          includeZero: true
+        },
+        data: [{
+          type: "column", //change type to bar, line, area, pie, etc
+          //indexLabel: "{y}", //Shows y value on all Data Points
+          indexLabelFontColor: "#5A5757",
+          dataPoints: Array.from(this.amountPerDay).map(([label, y]) => ({label, y}))
+        }]
       }
+    }else{
+      this.errorNoTransactions="No transaction for this customer"
     }
+    
+   }else{
+      this.errorNotValidCautomer="Not Valid Customer";
+   }
    
-    this.chartOptions= {
-      title: {
-        text: ` customer ${this.selectedCustomer[0].name}. `
-      },
-      animationEnabled: true,
-      axisY: {
-        includeZero: true
-      },
-      data: [{
-        type: "column", //change type to bar, line, area, pie, etc
-        //indexLabel: "{y}", //Shows y value on all Data Points
-        indexLabelFontColor: "#5A5757",
-        dataPoints: Array.from(this.amountPerDay).map(([label, y]) => ({label, y}))
-      }]
-    }
   }
  
 	
