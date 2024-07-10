@@ -1,0 +1,26 @@
+<div class="container p-5">
+    <div class="d-flex justify-content-evenly">
+        <input type="search" name="search" [(ngModel)]="customerSearchName" class="form-control w-25" placeholder="search by customer name...">
+        <input type="number" class="form-control w-25"  [(ngModel)]="transactionSearchAmount" placeholder="search by amount...">
+    </div>
+    <table class="table table-bordered table-striped  mt-3">
+        <thead>
+            <tr>
+                <th class="text-center">Customer Name</th>
+                <th colspan="2" class="text-center">Trasactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr   *ngFor="let customer of (cutomers | customerSerachName:customerSearchName )" [routerLink]="['/graph',customer.id]">
+                    <td>{{customer.name}}</td>
+                    <td *ngFor="let transaction of (transactions | filterTransactions:customer.id |amountFilter:transactionSearchAmount )" >
+                        {{transaction.amount | currency:"EGP "}} - on: {{transaction.date| date}}
+                    </td>
+             </tr>
+        </tbody>
+    </table>
+    <div class="alert alert-danger text-center w-75 mx-auto">
+        <h2>Click on any customer to Get Graph for his Transactions</h2>
+    </div>
+</div>
+
