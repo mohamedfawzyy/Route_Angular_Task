@@ -1,7 +1,28 @@
+
+
 # App
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.11.
 
+## Installation
+1. Install JSON Server
+   ```
+   npm install -g json-server
+   ```
+2. make sure that your db.json in main directory   
+3. Start JSON Server
+   ```
+   json-server --watch db.json
+   ```
+4.   Accessing Data
+    ```
+    http://localhost:3000/customers
+    http://localhost:3000/transactions
+    ```
+5. open app in VS then in VS terminal
+  ```
+  ng s -o --hmr
+  ```
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
